@@ -3,7 +3,8 @@
 # Copyright 2017 Ryuichi Ueda
 # Released under the BSD License.
 
-import rospy, rosbag, math, sys, random
+import rospy, rosbag, rosparam
+import math, sys, random, datetime
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 from raspimouse_ros_2.msg import LightSensorValues, ButtonValues
@@ -36,11 +37,12 @@ class Logger():
 	    if self.bag_open:
 		self.bag.close()
 		self.bag_open = False
-
 	    return
 	else:
 	    if not self.bag_open:
-		self.bag = rosbag.Bag('current.bag', 'w')
+		filename = datetime.datetime.today().strftime("%Y%m%d_%H%M%S") + '.bag'
+		rosparam.set_param("/current_bag_file", filename)
+		self.bag = rosbag.Bag(filename, 'w')
 		self.bag_open = True
 
 	s = self.sensor_values
