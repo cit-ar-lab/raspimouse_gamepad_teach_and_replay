@@ -11,3 +11,13 @@
 記録を終了するときは再び前ボタンを押して終了します。
 記録中のトピックは~/.ros/内にバグファイルとしても記録されます。
 ファイル名はROSのパラメータとして/current\_bag\_fileから得ることができます。
+
+## 貢献者リスト
+
+* Ryo Okazak
+
+ゲームパッドによるロボット操作のプログラム（元のコードのリポジトリ: https://github.com/zaki0929/raspimouse\_game\_controller）
+
+* Masahiro Kato
+
+イベントの出力コードの作成（元のコードのリポジトリ: https://github.com/kato-masahiro/raspimouse\_maze\_manual）
