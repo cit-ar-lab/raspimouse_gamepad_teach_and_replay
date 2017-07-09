@@ -3,11 +3,14 @@ project(raspimouse_gamepad_training_replay)
 
 ## Add support for C++11, supported in ROS Kinetic and newer
 # add_definitions(-std=c++11)
+set(CMAKE_CXX_FLAGS "-std=c++0x ${CMAKE_CXX_FLAGS}")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  rosbag
+  roslib
   roscpp
   rospy
   std_msgs
@@ -51,6 +54,7 @@ find_package(catkin REQUIRED COMPONENTS
 add_message_files(
   FILES
   Event.msg
+  PFoEOutput.msg
 )
 
 ## Generate services in the 'srv' folder
@@ -124,6 +128,11 @@ include_directories(
 # add_library(${PROJECT_NAME}
 #   src/${PROJECT_NAME}/raspimouse_gamepad_training_replay.cpp
 # )
+add_library(Observation src/Observation.cpp)
+add_library(Event src/Event.cpp)
+add_library(ParticleFilter src/ParticleFilter.cpp)
+add_library(Episodes src/Episodes.cpp)
+add_library(Particle src/Particle.cpp)
 
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
@@ -134,6 +143,7 @@ include_directories(
 ## With catkin_make all packages are built within a single CMake context
 ## The recommended prefix ensures that target names across packages don't collide
 # add_executable(${PROJECT_NAME}_node src/raspimouse_gamepad_training_replay_node.cpp)
+add_executable(replay src/replay.cpp)
 
 ## Rename C++ executable without prefix
 ## The above recommended prefix causes long target names, the following renames the
@@ -144,11 +154,19 @@ include_directories(
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 # add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+add_dependencies(replay ${TARGET_NAME} ${PROJECT_NAME}_generate_messages_cpp)
+add_dependencies(ParticleFilter ${TARGET_NAME} ${PROJECT_NAME}_generate_messages_cpp)
 
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(${PROJECT_NAME}_node
 #   ${catkin_LIBRARIES}
 # )
+target_link_libraries(replay ${catkin_LIBRARIES})
+target_link_libraries(replay Observation ${catkin_LIBRARIES})
+target_link_libraries(replay Event ${catkin_LIBRARIES})
+target_link_libraries(replay Episodes ${catkin_LIBRARIES})
+target_link_libraries(replay ParticleFilter ${catkin_LIBRARIES})
+target_link_libraries(replay Particle ${catkin_LIBRARIES})
 
 #############
 ## Install ##
