@@ -3,29 +3,46 @@
 # Copyright 2017 Ryuichi Ueda
 # Released under the BSD License.
 
-import rospy, math, sys, random
+import rospy, rosbag, math, sys, random
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
-from raspimouse_ros_2.msg import LightSensorValues
+from raspimouse_ros_2.msg import LightSensorValues, ButtonValues
 from raspimouse_gamepad_training_replay.msg import Event
 
 class Logger():
     def __init__(self):
-        self.decision = rospy.Publisher('/event',Event,queue_size=100)
-
         self.sensor_values = LightSensorValues()
-        rospy.Subscriber('/lightsensors', LightSensorValues, self.callback)
-
         self.cmd_vel = Twist()
-        rospy.Subscriber('/cmd_vel', Twist, self.callback2)
 
-    def callback(self,messages):
+        self._decision = rospy.Publisher('/event',Event,queue_size=100)
+	rospy.Subscriber('/buttons', ButtonValues, self.button_callback, queue_size=1)
+        rospy.Subscriber('/lightsensors', LightSensorValues, self.sensor_callback)
+        rospy.Subscriber('/cmd_vel', Twist, self.cmdvel_callback)
+
+	self.on = False
+	self.bag_open = False
+
+    def button_callback(self,msg):
+        self.on = msg.front_toggle
+
+    def sensor_callback(self,messages):
         self.sensor_values = messages
 
-    def callback2(self,messages):
+    def cmdvel_callback(self,messages):
         self.cmd_vel = messages
 
     def output_decision(self):
+	if not self.on:
+	    if self.bag_open:
+		self.bag.close()
+		self.bag_open = False
+
+	    return
+	else:
+	    if not self.bag_open:
+		self.bag = rosbag.Bag('current.bag', 'w')
+		self.bag_open = True
+
 	s = self.sensor_values
 	a = self.cmd_vel
 	e = Event()
@@ -37,7 +54,8 @@ class Logger():
         e.linear_x = a.linear.x
         e.angular_z = a.angular.z
 
-        self.decision.publish(e)
+        self._decision.publish(e)
+	self.bag.write('/event', e)
 
     def run(self):
         rate = rospy.Rate(10)
