@@ -16,8 +16,8 @@
 
 * Ryo Okazak
 
-ゲームパッドによるロボット操作のプログラム（元のコードのリポジトリ: https://github.com/zaki0929/raspimouse\_game\_controller）
+ゲームパッドによるロボット操作のプログラム（元のコードのリポジトリ: https://github.com/zaki0929/raspimouse_game_controller）
 
 * Masahiro Kato
 
-イベントの出力コードの作成（元のコードのリポジトリ: https://github.com/kato-masahiro/raspimouse\_maze\_manual）
+イベントの出力コードの作成（元のコードのリポジトリ: https://github.com/kato-masahiro/raspimouse_maze_manual）
