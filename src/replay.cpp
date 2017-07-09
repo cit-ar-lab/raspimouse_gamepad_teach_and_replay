@@ -12,7 +12,7 @@
 #include "geometry_msgs/Twist.h"
 #include "raspimouse_ros_2/LightSensorValues.h"
 #include "raspimouse_ros_2/TimedMotion.h"
-#include "raspimouse_maze/Decision.h"
+#include "raspimouse_gamepad_training_replay/Event.h"
 #include "ParticleFilter.h"
 //#include "raspimouse_gamepad_training_replay/PFoEOutput.h"
 using namespace ros;
@@ -59,21 +59,18 @@ void readEpisodes(string file)
 	rosbag::Bag bag1(path + "/bags/" + file, rosbag::bagmode::Read);
 
 	vector<std::string> topics;
-	topics.push_back("/decision");
+	topics.push_back("/event");
 	
 	rosbag::View view(bag1, rosbag::TopicQuery(topics));
 
-	double end = view.getEndTime().toSec() - 5.0; //discard last 5 sec
 	for(auto i : view){
-	        auto s = i.instantiate<raspimouse_maze::Decision>();
+	        auto s = i.instantiate<raspimouse_gamepad_training_replay::Event>();
 
 		Observation obs(s->left_forward,s->left_side,s->right_side,s->right_forward);
 		Action a = {s->linear_x,s->angular_z};
 		Event e(obs,a,0.0);
 		e.time = i.getTime();
 		ep.append(e);
-		if(e.time.toSec() > end)
-			break;
 	}
 }
 
