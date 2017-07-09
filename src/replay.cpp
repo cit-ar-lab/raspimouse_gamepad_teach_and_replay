@@ -12,6 +12,7 @@
 #include "geometry_msgs/Twist.h"
 #include "raspimouse_ros_2/LightSensorValues.h"
 #include "raspimouse_ros_2/TimedMotion.h"
+#include "raspimouse_ros_2/ButtonValues.h"
 #include "raspimouse_gamepad_training_replay/Event.h"
 #include "ParticleFilter.h"
 //#include "raspimouse_gamepad_training_replay/PFoEOutput.h"
