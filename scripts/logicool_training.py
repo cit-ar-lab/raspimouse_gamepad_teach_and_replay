@@ -7,20 +7,33 @@ import rospy
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 from sensor_msgs.msg import Joy
+from raspimouse_ros_2.msg import ButtonValues, LedValues
 
 class JoyTwist(object):
     def __init__(self):
         self._joy_sub = rospy.Subscriber('/joy', Joy, self.joy_callback, queue_size=1)
+        self._btn_sub = rospy.Subscriber('/buttons', ButtonValues, self.button_callback, queue_size=1)
         self._twist_pub = rospy.Publisher('/cmd_vel', Twist, queue_size=1)
+        self._led_pub = rospy.Publisher('/leds', LedValues, queue_size=1)
 
         self.level = 1
+	self.on = False
 
     def limitter(self, lvl):
 	if lvl <= 0:	return 1
 	if lvl >= 6: 	return 5
 	return lvl
 
+    def button_callback(self, btn_msg):
+	self.on = btn_msg.front_toggle
+	leds = LedValues()
+	leds.left_side = self.on
+	self._led_pub.publish(leds)
+
     def joy_callback(self, joy_msg):
+	if not self.on:
+		return
+
         if joy_msg.buttons[7] == 1: self.level += 1
         if joy_msg.buttons[6] == 1: self.level -= 1
 	self.level = self.limitter(self.level)
