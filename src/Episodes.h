@@ -14,6 +14,7 @@ public:
 	void append(Event e);
 	void print(string filename = "");
 	//void renewEpisode(void);
+	void reset(void);
 
 	Event *At(int pos);
 	Observation *obsAt(int pos);

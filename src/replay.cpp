@@ -15,7 +15,7 @@
 #include "raspimouse_ros_2/ButtonValues.h"
 #include "raspimouse_gamepad_training_replay/Event.h"
 #include "ParticleFilter.h"
-//#include "raspimouse_gamepad_training_replay/PFoEOutput.h"
+#include "raspimouse_gamepad_training_replay/PFoEOutput.h"
 using namespace ros;
 
 Episodes ep;
@@ -25,6 +25,14 @@ Observation sensor_values;
 
 NodeHandle *np;
 int sum_forward = 0;
+
+bool on = false;
+bool bag_read = false;
+
+void buttonCallback(const raspimouse_ros_2::ButtonValues::ConstPtr& msg)
+{
+	on = msg->mid_toggle;
+}
 
 void sensorCallback(const raspimouse_ros_2::LightSensorValues::ConstPtr& msg)
 {
@@ -41,23 +49,11 @@ void on_shutdown(int sig)
 	shutdown();
 }
 
-bool forward(raspimouse_ros_2::TimedMotion *d)
-{
-	int side_diff = sensor_values.ls - sensor_values.rs;
-	int diff_hz = side_diff/10; //差の1/10
-
-	int fw_hz = (2500 - sum_forward)/10;
-
-	d->request.left_hz = fw_hz + diff_hz;
-	d->request.right_hz = fw_hz - diff_hz;
-	d->request.duration_ms = 100;
-	return true;
-}
-
 void readEpisodes(string file)
 {
-	string path = ros::package::getPath("raspimouse_gamepad_training_replay");
-	rosbag::Bag bag1(path + "/bags/" + file, rosbag::bagmode::Read);
+	ep.reset();
+
+	rosbag::Bag bag1(file, rosbag::bagmode::Read);
 
 	vector<std::string> topics;
 	topics.push_back("/event");
@@ -82,6 +78,7 @@ int main(int argc, char **argv)
 	np = &n;
 
 	Subscriber sub = n.subscribe("lightsensors", 1, sensorCallback);
+	Subscriber sub_b = n.subscribe("buttons", 1, buttonCallback);
 	Publisher cmdvel = n.advertise<geometry_msgs::Twist>("cmd_vel", 1);
 	Publisher pfoe_out = n.advertise<raspimouse_gamepad_training_replay::PFoEOutput>("pfoe_out", 100);
 	ros::ServiceClient motor_on = n.serviceClient<std_srvs::Trigger>("motor_on");
@@ -93,22 +90,29 @@ int main(int argc, char **argv)
 	std_srvs::Trigger t;
 	motor_on.call(t);
 
-	//for(int i=1;i<6;i++){
-		string f = "layout_1.bag";
-		cout << f << endl;
-		readEpisodes(f);
-//	}
-	//ep.renewEpisode();
-	//ep.print("episode20170613_am");
-
 	geometry_msgs::Twist msg;
 	pf.init();
 	Rate loop_rate(10);
 	Action act = {0.0,0.0};
 	while(ok()){
+		if(not on){
+			cout << "idle" << endl;
+			bag_read = false;
+			spinOnce();
+			loop_rate.sleep();
+			continue;
+		}else if(not bag_read){
+			string bagfile;
+			n.getParam("/current_bag_file", bagfile);
+			readEpisodes(bagfile);
+			bag_read = true;
+			pf.init();
+			spinOnce();
+			loop_rate.sleep();
+			continue;
+		}
 		raspimouse_gamepad_training_replay::PFoEOutput out;
 
-		//Action act = pf.sensorUpdate(&sensor_values, &ep, &out);
 		act = pf.sensorUpdate(&sensor_values, &act, &ep, &out);
 		msg.linear.x = act.linear_x;
 		out.linear_x = act.linear_x;

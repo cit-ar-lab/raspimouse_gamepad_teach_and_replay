@@ -4,8 +4,7 @@ using namespace std;
 
 Episodes::Episodes()
 {
-	//current_episode_id = 0;
-	current_event_id = 0;
+	reset();
 }
 
 void Episodes::append(Event e)
@@ -15,6 +14,12 @@ void Episodes::append(Event e)
 	data.push_back(e);
 
 	current_event_id++;
+}
+
+void Episodes::reset(void)
+{
+	data.clear();
+	current_event_id = 0;
 }
 
 /*

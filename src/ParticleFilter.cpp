@@ -135,10 +135,10 @@ Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep,
 		out->particles_pos.push_back(p.pos);
 	}
 
-//	cout << "mode" << endl;
-//	return mode(ep);
-	cout << "avg" << endl;
-	return average(ep);
+	cout << "mode" << endl;
+	return mode(ep);
+//	cout << "avg" << endl;
+//	return average(ep);
 }
 
 double ParticleFilter::likelihood(Observation *past, Observation *last)

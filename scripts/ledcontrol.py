@@ -12,7 +12,6 @@ class LedControl(object):
         self._led_pub = rospy.Publisher('/leds', LedValues, queue_size=1)
 
     def button_callback(self, btn_msg):
-        print btn_msg
 	leds = LedValues()
 	leds.left_side = btn_msg.front_toggle
 	leds.left_forward = btn_msg.mid_toggle
