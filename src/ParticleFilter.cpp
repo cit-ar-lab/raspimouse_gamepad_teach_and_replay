@@ -20,7 +20,7 @@ void ParticleFilter::init(void)
 {
 	double w = 1.0/particles.size();
 	for(auto &p : particles){
-		p.pos = prob.uniformRandInt(0,episodes->data.size()-1);
+		p.pos = prob.uniformRandInt(0,episodes->data.size()-2);
 		p.weight = w;
 	}
 }
@@ -75,7 +75,7 @@ Action ParticleFilter::mode(Episodes *ep)
 		auto e = ep->At(p.pos);
 		if(e->counter > max){
 			max = e->counter;
-			mode_a = ep->actionAt(p.pos);
+			mode_a = ep->actionAt(p.pos+1);
 		}
 		e->counter = 0;
 	}
@@ -92,7 +92,7 @@ Action ParticleFilter::average(Episodes *ep)
 	double rot = 0.0;
 	cout << "avg" << endl;
 	for(auto &p : particles){
-		auto e = ep->actionAt(p.pos);
+		auto e = ep->actionAt(p.pos+1);
 		fw += p.weight * e->linear_x;
 		rot += p.weight * e->angular_z;
 	}
@@ -250,7 +250,7 @@ void ParticleFilter::motionUpdate(Episodes *ep)
 	cout << "odom" << endl;
 	for(auto &p : particles){
 		if(rand() % 10 == 0){
-			p.pos = prob.uniformRandInt(0,episodes->data.size()-1);
+			p.pos = prob.uniformRandInt(0,episodes->data.size()-2);
 			continue;
 		}
 
@@ -260,8 +260,8 @@ void ParticleFilter::motionUpdate(Episodes *ep)
 		else if(r==1)
 			p.pos += 2;
 
-		if(p.pos >= ep->data.size())
-			p.pos = prob.uniformRandInt(0,episodes->data.size()-1);
+		if(p.pos >= ep->data.size()-1)
+			p.pos = prob.uniformRandInt(0,episodes->data.size()-2);
 
 	}
 }

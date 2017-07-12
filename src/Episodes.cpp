@@ -63,7 +63,10 @@ Observation *Episodes::obsAt(int pos)
 
 Action *Episodes::actionAt(int pos)
 {
-	if(pos < 0 || pos >= data.size())
+	if(pos < 0 || pos >= data.size()){
+		cerr << "OUT OF INDEX at actionAt" << endl;
+		exit(1);
 		return NULL;
+	}
 	return &(data[pos].action);
 }
