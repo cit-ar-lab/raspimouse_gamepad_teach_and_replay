@@ -60,6 +60,8 @@ void readEpisodes(string file)
 	
 	rosbag::View view(bag1, rosbag::TopicQuery(topics));
 
+	double start = view.getBeginTime().toSec() + 5.0; //discard first 5 sec
+	double end = view.getEndTime().toSec() - 5.0; //discard last 5 sec
 	for(auto i : view){
 	        auto s = i.instantiate<raspimouse_gamepad_training_replay::Event>();
 
@@ -67,7 +69,14 @@ void readEpisodes(string file)
 		Action a = {s->linear_x,s->angular_z};
 		Event e(obs,a,0.0);
 		e.time = i.getTime();
+
+		if(e.time.toSec() < start)
+			continue;
+
 		ep.append(e);
+
+		if(e.time.toSec() > end)
+			break;
 	}
 }
 
