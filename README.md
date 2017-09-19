@@ -1,37 +1,31 @@
 # raspimouse_gamepad_training_replay
-デモ用
 
-## 操作方法
+### teaching
 
-まだ思いがけないバグでロボットが暴走するかもしれませんので、
-机の上で試すときは落下しないように注意してください。
+The teaching phase starts with a long push of the front button.
+The LED at the left side is turned on, and you can control the
+robot with a gamepad. When you can stop the teach 
+with a push of the front button again. The episode is recored
+to a file in ~/.ros/. The name of the file can be
+obtained from the ROS parameter `/current\_bag\_file`.
 
-### トレーニング
+### replay
 
-ロボットの前ボタンを長押しすると左横のLEDが点灯します。
-この状態ではロボットがゲームパッドの操作を受け付け、
-センサとモータの出力をeventというトピックに記録するようになります。
-記録を終了するときは再び前ボタンを押して終了します。
-記録中のトピックは~/.ros/内にバグファイルとしても記録されます。
-ファイル名はROSのパラメータとして/current\_bag\_fileから得ることができます。
+After the training, the replay can be started with a long push
+of the center button. It finishes with one more push of the
+center button. After that, you can restart the replay again.
 
-### リプレイ
+### caution
 
-トレーニングを終了後、
-ロボットの中ボタンを長押しするとリプレイがスタートします。
-もう一度中ボタンを長押しすると終了します。
-その後は再びトレーニングかリプレイが選択できます。
+Bag files are stored in ~/.ros but they are not erased. Please
+clean in the directory occasionally. 
 
-### 注意
-
-~/.ros下にバグファイルが溜まっていくので定期的に掃除をお願いします。
-
-## 貢献者リスト
+## contributers
 
 * Ryo Okazak
 
-ゲームパッドによるロボット操作のプログラム（元のコードのリポジトリ: https://github.com/zaki0929/raspimouse_game_controller）
+codes for gamepad control (original repo: https://github.com/zaki0929/raspimouse_game_controller ）
 
 * Masahiro Kato
 
-イベントの出力コードの作成（元のコードのリポジトリ: https://github.com/kato-masahiro/raspimouse_maze_manual）
+codes for teaching (original repo: https://github.com/kato-masahiro/raspimouse_maze_manual ）
