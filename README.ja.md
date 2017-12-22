@@ -1,4 +1,4 @@
-# raspimouse_gamepad_training_replay
+# raspimouse_gamepad_teach_and_replay
 デモ用
 
 ## 操作方法
