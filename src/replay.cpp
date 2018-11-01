@@ -100,7 +100,7 @@ int main(int argc, char **argv)
 	motor_on.call(t);
 
 	geometry_msgs::Twist msg;
-	pf.init();
+	//pf.init();
 	Rate loop_rate(10);
 	Action act = {0.0,0.0};
 	while(ok()){
