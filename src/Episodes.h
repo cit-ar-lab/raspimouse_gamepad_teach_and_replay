@@ -19,8 +19,9 @@ public:
 	Event *At(int pos);
 	Observation *obsAt(int pos);
 	Action *actionAt(int pos);
+
 private:
-//	int current_episode_id;
+	//	int current_episode_id;
 	int current_event_id;
 };
 

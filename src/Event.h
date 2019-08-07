@@ -1,5 +1,5 @@
-#ifndef __EVENT__H_ 
-#define __EVENT__H_ 
+#ifndef __EVENT__H_
+#define __EVENT__H_
 
 #include <string>
 #include <vector>
@@ -8,11 +8,16 @@
 #include "Observation.h"
 using namespace std;
 
-struct Action{double linear_x;double angular_z;};
+struct Action
+{
+	double linear_x;
+	double angular_z;
+};
 
-class Event{
+class Event
+{
 public:
-	Event(Observation obs,Action act, int rw);
+	Event(Observation obs, Action act, int rw);
 	int reward;
 	Observation observation;
 	Action action;

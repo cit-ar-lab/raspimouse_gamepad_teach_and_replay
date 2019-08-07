@@ -1,4 +1,4 @@
-#ifndef __OBS_H_ 
+#ifndef __OBS_H_
 #define __OBS_H_
 
 #include <string>
@@ -7,12 +7,13 @@
 #include "ros/ros.h"
 using namespace std;
 
-class Observation{
+class Observation
+{
 public:
 	Observation();
-	Observation(int left_f,int left_s, int right_s, int right_f);
+	Observation(int left_f, int left_s, int right_s, int right_f);
 
-	void setValues(int left_f,int left_s, int right_s, int right_f);
+	void setValues(int left_f, int left_s, int right_s, int right_f);
 
 	int lf;
 	int ls;

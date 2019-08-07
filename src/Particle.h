@@ -5,7 +5,7 @@ class Particle
 {
 public:
 	Particle(double w);
-	virtual ~Particle(){}
+	virtual ~Particle() {}
 	double weight;
 	int pos;
 };

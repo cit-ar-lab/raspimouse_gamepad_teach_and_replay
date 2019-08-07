@@ -18,12 +18,13 @@ public:
 	void init(void);
 	void print(void);
 
-//	Action sensorUpdate(Observation *obs, Episodes *ep, raspimouse_gamepad_teach_and_replay::PFoEOutput *out);
+	//	Action sensorUpdate(Observation *obs, Episodes *ep, raspimouse_gamepad_teach_and_replay::PFoEOutput *out);
 	Action sensorUpdate(Observation *obs, Action *act, Episodes *ep, raspimouse_gamepad_teach_and_replay::PFoEOutput *out);
 	Action mode(Episodes *ep);
 	Action modeParticle(Episodes *ep);
 	Action average(Episodes *ep);
 	void motionUpdate(Episodes *ep);
+
 private:
 	vector<Particle> particles;
 	ProbDistributions prob;

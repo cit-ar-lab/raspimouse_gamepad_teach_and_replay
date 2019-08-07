@@ -34,36 +34,38 @@ void Episodes::print(string filename)
 {
 	ofstream ofs;
 	ostream *io;
-	if(filename == "")
+	if (filename == "")
 		io = &cout;
-	else{
+	else
+	{
 		ofs.open(filename);
 		io = &ofs;
 	}
-		
-		
-	for(auto e : data){
+
+	for (auto e : data)
+	{
 		*io << e.str() << endl;
 	}
 }
 
 Event *Episodes::At(int pos)
 {
-	if(pos < 0 || pos >= data.size())
+	if (pos < 0 || pos >= data.size())
 		return NULL;
 	return &(data[pos]);
 }
 
 Observation *Episodes::obsAt(int pos)
 {
-	if(pos < 0 || pos >= data.size())
+	if (pos < 0 || pos >= data.size())
 		return NULL;
 	return &(data[pos].observation);
 }
 
 Action *Episodes::actionAt(int pos)
 {
-	if(pos < 0 || pos >= data.size()){
+	if (pos < 0 || pos >= data.size())
+	{
 		cerr << "OUT OF INDEX at actionAt" << endl;
 		exit(1);
 		return NULL;

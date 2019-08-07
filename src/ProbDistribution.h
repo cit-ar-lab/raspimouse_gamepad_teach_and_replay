@@ -21,19 +21,19 @@ public:
 
 	double normalRand(double mean, double stddev)
 	{
-		normal_distribution<> nd(mean,stddev);
+		normal_distribution<> nd(mean, stddev);
 		return nd(*gen);
 	}
 
 	double uniformRand(double min, double max)
 	{
-		uniform_real_distribution<> ud(min,max);
+		uniform_real_distribution<> ud(min, max);
 		return ud(*gen);
 	}
 
-	int uniformRandInt(int min,int max)
+	int uniformRandInt(int min, int max)
 	{
-		uniform_int_distribution<> ud(min,max);
+		uniform_int_distribution<> ud(min, max);
 		return ud(*gen);
 	}
 
