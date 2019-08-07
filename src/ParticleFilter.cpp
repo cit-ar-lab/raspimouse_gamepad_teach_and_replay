@@ -113,7 +113,7 @@ Action ParticleFilter::average(Episodes *ep)
 	return a;
 }
 
-Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep, raspimouse_gamepad_teach_and_replay::PFoEOutput *out)
+Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep, raspimouse_gamepad_teach_and_replay_msgs::PFInformation *out)
 {
 	out->eta = 0.0;
 	cout << "obs likelihood" << endl;
@@ -145,7 +145,7 @@ Action ParticleFilter::sensorUpdate(Observation *obs, Action *act, Episodes *ep,
 
 	for (auto &p : particles)
 	{
-		out->particles_pos.push_back(p.pos);
+		out->positions.push_back(p.pos);
 	}
 
 	cout << "mode" << endl;

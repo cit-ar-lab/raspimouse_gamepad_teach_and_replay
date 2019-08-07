@@ -13,9 +13,9 @@
 #include "raspimouse_ros_2/LightSensorValues.h"
 #include "raspimouse_ros_2/TimedMotion.h"
 #include "raspimouse_ros_2/ButtonValues.h"
-#include "raspimouse_gamepad_teach_and_replay/Event.h"
+#include "raspimouse_gamepad_teach_and_replay_msgs/RaspiMouseEvent.h"
 #include "ParticleFilter.h"
-#include "raspimouse_gamepad_teach_and_replay/PFoEOutput.h"
+#include "raspimouse_gamepad_teach_and_replay_msgs/PFInformation.h"
 using namespace ros;
 
 Episodes ep;
@@ -64,10 +64,10 @@ void readEpisodes(string file)
 	double end = view.getEndTime().toSec() - 5.0;	 //discard last 5 sec
 	for (auto i : view)
 	{
-		auto s = i.instantiate<raspimouse_gamepad_teach_and_replay::Event>();
+		auto s = i.instantiate<raspimouse_gamepad_teach_and_replay_msgs::RaspiMouseEvent>();
 
-		Observation obs(s->left_forward, s->left_side, s->right_side, s->right_forward);
-		Action a = {s->linear_x, s->angular_z};
+		Observation obs(s->observation.left_forward, s->observation.left_side, s->observation.right_side, s->observation.right_forward);
+		Action a = {s->action.linear.x, s->action.angular.z};
 		Event e(obs, a, 0.0);
 		e.time = i.getTime();
 
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 	Subscriber sub = n.subscribe("lightsensors", 1, sensorCallback);
 	Subscriber sub_b = n.subscribe("buttons", 1, buttonCallback);
 	Publisher cmdvel = n.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-	Publisher pfoe_out = n.advertise<raspimouse_gamepad_teach_and_replay::PFoEOutput>("pfoe_out", 100);
+	Publisher pfoe_out = n.advertise<raspimouse_gamepad_teach_and_replay_msgs::PFInformation>("pfoe_out", 100);
 	ros::ServiceClient motor_on = n.serviceClient<std_srvs::Trigger>("motor_on");
 	ros::ServiceClient tm = n.serviceClient<raspimouse_ros_2::TimedMotion>("timed_motion");
 
@@ -125,18 +125,11 @@ int main(int argc, char **argv)
 			loop_rate.sleep();
 			continue;
 		}
-		raspimouse_gamepad_teach_and_replay::PFoEOutput out;
+		raspimouse_gamepad_teach_and_replay_msgs::PFInformation out;
 
 		act = pf.sensorUpdate(&sensor_values, &act, &ep, &out);
 		msg.linear.x = act.linear_x;
-		out.linear_x = act.linear_x;
 		msg.angular.z = act.angular_z;
-		out.angular_z = act.angular_z;
-
-		out.left_forward = sensor_values.lf;
-		out.left_side = sensor_values.ls;
-		out.right_forward = sensor_values.rf;
-		out.right_side = sensor_values.rs;
 
 		cmdvel.publish(msg);
 		pfoe_out.publish(out);

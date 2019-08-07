@@ -13,7 +13,7 @@ import datetime
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Trigger, TriggerResponse
 from raspimouse_ros_2.msg import LightSensorValues, ButtonValues
-from raspimouse_gamepad_teach_and_replay.msg import Event
+from raspimouse_gamepad_teach_and_replay_msgs.msg import RaspiMouseEvent
 
 
 class Logger():
@@ -21,7 +21,7 @@ class Logger():
         self.sensor_values = LightSensorValues()
         self.cmd_vel = Twist()
 
-        self._decision = rospy.Publisher('/event', Event, queue_size=100)
+        self._decision = rospy.Publisher('/event', RaspiMouseEvent, queue_size=100)
         rospy.Subscriber('/buttons', ButtonValues, self.button_callback, queue_size=1)
         rospy.Subscriber('/lightsensors', LightSensorValues, self.sensor_callback)
         rospy.Subscriber('/cmd_vel', Twist, self.cmdvel_callback)
@@ -53,7 +53,7 @@ class Logger():
 
         s = self.sensor_values
         a = self.cmd_vel
-        e = Event()
+        e = RaspiMouseEvent()
 
         e.left_side = s.left_side
         e.right_side = s.right_side

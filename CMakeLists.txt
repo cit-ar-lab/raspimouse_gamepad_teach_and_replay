@@ -9,22 +9,11 @@ find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
   std_msgs
-  message_generation
-)
-
-add_message_files(
-  FILES
-  Event.msg
-  PFoEOutput.msg
-)
-
-generate_messages(
-  DEPENDENCIES
-  std_msgs
+  raspimouse_gamepad_teach_and_replay_msgs
 )
 
 catkin_package(
-  CATKIN_DEPENDS roscpp rospy std_msgs
+  CATKIN_DEPENDS roscpp rospy std_msgs raspimouse_gamepad_teach_and_replay_msgs
 )
 
 include_directories(
